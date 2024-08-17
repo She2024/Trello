@@ -1,11 +1,11 @@
 from init import db, ma
 
 class User(db.Model):
-    # Name of table
-    __tablename__= "users"
+    # name of the table
+    __tablename__ = "users"
 
-    # sttributes of the table
-    id = db.Column(db.interger, primary_key=True)
+    # attributes of the table
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
@@ -20,5 +20,4 @@ class UserSchema(ma.Schema):
 user_schema = UserSchema(exclude=["password"])
 
 # to handle a list of user objects
-user_schema = UserSchema(many=True, exclude=["password"])
-
+users_schema = UserSchema(many=True, exclude=["password"])
