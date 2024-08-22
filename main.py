@@ -16,5 +16,5 @@ def create_app():
     jwt.init_app(app)
 
     app.register_blueprint(db_commands)
-    app.register_blueprint()
+    app.register_blueprint(auth_bp)
     return app

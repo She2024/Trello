@@ -1,27 +1,27 @@
 from init import db, ma
 from marshmallow import fields
 
-class Card(db.Model):
-    __tablename__ = "cards"
+class User(db.Model):
+    # name of the table
+    __tablename__ = "users"
 
+    # attributes of the table
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=False)
-    description = db.Column(db.String)
-    status = db.Column(db.String)
-    priority = db.Column(db.String)
-    date = db.Column(db.Date) # Created Date
+    name = db.Column(db.String)
+    email = db.Column(db.String, nullable=False, unique=True)
+    password = db.Column(db.String, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable = False)
+    cards = db.relationship("Card", back_populates="user")
 
-    user = db.relationship('User', back_populates='cards')
-
-
-class CardSchema(ma.Schema):
-    user = fields.Nested('UserSchema', only=["id", "name", "email"])
-
+class UserSchema(ma.Schema):
     class Meta:
-        fields = ("id", "title", "description", "status", "priority", "date", "user")
+        cards = fields.List(fields.Nested('CardSchema', exclude=["user"]))
 
-card_schema = CardSchema()
-cards_schema = CardSchema(many=True)
+        fields = ("id", "name", "email", "password", "is_admin", "cards")
 
+# to handle a single user object
+user_schema = UserSchema(exclude=["password"])
+
+# to handle a list of user objects
+users_schema = UserSchema(many=True, exclude=["password"])
